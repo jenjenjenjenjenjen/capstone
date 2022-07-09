@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="display-1">Edit Post</h1>
+<form method="POST">
+    {{form.hidden_tag()}}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}/{{post_details.poster_path}}" alt="{{post_details.original_title or post_details.name}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{post_details.original_title or post_details.name}}</h5>
+            {{form.content.label}}
+            {{form.content(placeholder=post.content)}}
+            {% for field in form 
+                if field.widget.input_type != 'hidden' %}
+                {% for err in field.errors %}
+                    <span class="form-text text-danger">{{err}}</span>
+                {% endfor %}
+            {% endfor %}
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <form action="/posts/{{post.id}}/delete">
+                <button class="btn btn-danger">Delete Post</button>
+            </form>
+        </div>
+    </div>
+</form>
+{% endblock %}

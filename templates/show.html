@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{show.name}}</h1>
+<img src="{{img_url}}{{show.backdrop_path}}" alt="">
+<div>
+    {% if user %}
+    <form action="/like/show/{{show.id}}", method="POST">
+        <button 
+        class="btn 
+        {% for like in user.likes %}
+        {% if show.id == like.movie_id %}
+        btn-primary
+        {% endif %}
+        {% endfor %}
+        ">
+            <i class="bi bi-heart"></i>
+        </button>
+    </form>
+    <form action="/posts/new/tv/{{show.id}}">
+        <button class="btn">
+            <i class="bi bi-pencil-square"></i>
+        </button>
+    </form>
+    {% endif %}
+    <p>{{show.overview}}</p>
+    <ul>
+        <li>
+            Created by: 
+            <ul>
+            {% for n in show.created_by %}
+                <li>{{n.name}}</li>
+            {% endfor %}
+            </ul>
+        </li>
+        <li>
+            Genre(s): 
+            <ul>
+            {% for n in show.genres %}
+                <li>{{n.name}}</li>
+            {% endfor %}
+            </ul>
+        </li>
+        <li>
+            Number of Episodes: {{show.number_of_episodes}}
+        </li>
+        <li>
+            Number of Seasons: {{show.number_of_seasons}}
+        </li>
+    </ul>
+</div>
+<div>
+    <h3>Seasons</h3>
+    {% for season in show.seasons %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{season.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">Season {{season.season_number}}</h5>
+            <p class="card-text">{{season.overview}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    <h3>Cast</h3>
+    {% for person in credits.cast %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><a href="/person/{{person.id}}">{{person.name}}</a></h5>
+            <p class="card-text">{{person.character}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    <h3>Crew</h3>
+    {% for person in credits.crew %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><a href="/person/{{person.id}}">{{person.name}}</a></h5>
+            <p class="card-text">{{person.job}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

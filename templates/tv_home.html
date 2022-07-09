@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="display-1">
+    TV Shows
+</h1>
+
+<div>
+    <h3 class="display-4">What's Popular:</h3>
+    {% for show in popular.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{show.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{show.original_title}}</h5>
+            <p class="card-text">{{show.overview}}</p>
+            <a href="/tv/{{show.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    <h3 class="display-4">Top Rated:</h3>
+    {% for show in top_rated.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{show.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{show.original_title}}</h5>
+            <p class="card-text">{{show.overview}}</p>
+            <a href="/tv/{{show.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    <h3 class="display-4">Airing Today:</h3>
+    {% for show in airing_today.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{show.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{show.original_title}}</h5>
+            <p class="card-text">{{show.overview}}</p>
+            <a href="/tv/{{show.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    <h3 class="display-4">New Releases:</h3>
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{latest.poster_path}}" class="card-img-top" alt="{{latest.name}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{latest.name}}</h5>
+            <p class="card-text">{{latest.overview}}</p>
+            <a href="/tv/{{latest.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

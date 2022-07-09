@@ -1,0 +1,11 @@
+{% extends 'user_profile.html' %}
+{% block more %}
+    {% for f in following %}
+        <div>
+            <ul>
+                <li>{{f.following.name}}</li>
+                <li>{{f.following.username}}</li>
+            </ul>
+        </div>
+    {% endfor %}
+{% endblock %}

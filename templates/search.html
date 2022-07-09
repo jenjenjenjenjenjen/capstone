@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="display-2">"{{search}}"</h1>
+
+<div>
+    {% for r in results.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{r.poster_path or r.profile_path}}" class="card-img-top" alt="{{r.original_title or r.name}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{r.original_title or r.name}}</h5>
+            <p class="card-text">{{r.overview}}</p>
+            <a href=
+            {% if r.media_type == 'tv' %}
+            "/tv/{{r.id}}"
+            {% elif r.media_type == 'movie' %}
+            "/movie/{{r.id}}"
+            {% else %}
+            "/person/{{r.id}}"
+            {% endif %}
+            class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

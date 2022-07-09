@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="display-1">Movies</h1>
+
+<div>
+    <h3 class="display-4">What's Popular:</h3>
+    {% for movie in popular.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{movie.original_title}}</h5>
+            <p class="card-text">{{movie.overview}}</p>
+            <a href="/movie/{{movie.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div>
+    <h3 class="display-4">Top Rated:</h3>
+    {% for movie in top_rated.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{movie.original_title}}</h5>
+            <p class="card-text">{{movie.overview}}</p>
+            <a href="/movie/{{movie.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div>
+    <h3 class="display-4">Now Playing:</h3>
+    {% for movie in now_playing.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{movie.original_title}}</h5>
+            <p class="card-text">{{movie.overview}}</p>
+            <a href="/movie/{{movie.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div>
+    <h3 class="display-4">Upcoming:</h3>
+    {% for movie in upcoming.results %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
+        <div class="card-body">
+            <h5 class="card-title">{{movie.original_title}}</h5>
+            <p class="card-text">{{movie.overview}}</p>
+            <a href="/tv/{{movie.id}}" class="btn btn-primary">See More</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

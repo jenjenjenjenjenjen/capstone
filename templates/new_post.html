@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="display-1">New Post</h1>
+
+    <form method="POST">
+        {{search_form.hidden_tag()}}
+        {% for field in search_form
+            if field.widget.input_type != 'hidden' %}
+        <p>
+            {{field.label}}
+            {{field(class_="form-control")}}
+        </p>
+        {% endfor %}
+        <button class="btn btn-success">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+
+
+    {% if movie %}
+    {% for m in movie.results %}
+    <form method="POST">
+        <p>
+            <div class="card" style="width: 18rem;">
+                <img src="{{img_url}}{{m.poster_path}}" alt="{{m.original_title or m.name}} Poster">
+                <div class="card-body">
+                    <h5 class="card-title">{{m.original_title or m.name}}</h5>
+                    {{select_form.csrf_token()}}
+                    {{select_form.movie_or_tv(value=movie_or_tv)}}
+                    {{select_form.movie_id(value=m.id)}}
+                    {% for field in select_form 
+                        if field.widget.input_type != 'hidden' %}
+                        {% for err in field.errors %}
+                            <span class="form-text text-danger">{{err}}</span>
+                        {% endfor %}
+                    {% endfor %}
+                    <button class="btn" style="width: 16rem;" type="submit">Select</button>
+                </div>
+            </div>
+        </p>
+    </form>
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {{form.csrf_token()}}
+        {% if selected_movie %}
+            <h4 class="display-4">Selected:</h4>
+            <div class="card" style="width: 18rem;">
+                <img src="{{img_url}}{{selected_movie.poster_path}}" class="card-img-top" alt="{{selected_movie.original_title or selected_movie.name}} Poster">
+                <div class="card-body">
+                    <h5 class="card-title">{{selected_movie.original_title or selected_movie.name}}</h5>
+                    <p class="card-text">{{selected_movie.overview}}</p>
+                </div>
+                {{form.movie_id(value=selected_movie.id)}}
+                {% if content_type == 'movie' %}
+                    {{form.type(value='m')}}
+                {% elif content_type == 'show' %}
+                    {{form.type(value='t')}}
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="card-body">
+            {% for field in form 
+                if field.widget.input_type != 'hidden' %}
+                <p>
+                    {{field.label}}
+                    {{field(class_="form-control")}}
+        
+                    {% for err in field.errors %}
+                        <span class="form-text text-danger">{{err}}</span>
+                    {% endfor %}
+                    <button class="btn btn-success">Submit</button>
+                </p>
+            {% endfor %}
+        </div>
+    </form>
+{% endblock%}

@@ -1,0 +1,28 @@
+{% extends 'profile.html' %}
+{% block buttons %}
+    {% if user.id != curr_user.id %}
+        {% if curr_user.following == [] %}
+            <form action="/follow/{{user.id}}", method="POST">
+                <button>Follow</button>
+            </form>
+        {% else %}
+            {% for following in curr_user.following %}
+                {% if following.following_id == user.id %}
+                    <form action="/unfollow/{{user.id}}", method="POST">
+                        <button>Unfollow</button>
+                    </form>
+                {% else %}
+                    <form action="/follow/{{user.id}}", method="POST">
+                        <button>Follow</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <form action="">
+            <button>Edit Profile</button>
+        </form>
+    {% endif %}
+{% endblock %}
+{% block more %}
+{% endblock %}

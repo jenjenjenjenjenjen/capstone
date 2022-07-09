@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{movie.original_title}}</h1>
+<div>
+    <img src="{{img_url}}{{movie.backdrop_path}}" alt="">
+</div>
+<div>
+    {% if curr_user %}
+    <form action="/like/{{movie.id}}", method="POST">
+        <button 
+        class="btn 
+        {% for like in curr_user.likes %}
+        {% if movie.id == like.movie_id %}
+        btn-primary
+        {% endif %}
+        {% endfor %}
+        ">
+            <i class="bi bi-heart"></i>
+        </button>
+    </form>
+    <form action="/posts/new/movie/{{movie.id}}">
+        <button class="btn">
+            <i class="bi bi-pencil-square"></i>
+        </button>
+    </form>
+    {% endif %}
+    <p>{{movie.overview}}</p>
+    <p>Rating: {{movie.popularity}}</p>
+    <ul>
+        <b>Genres:</b>
+        {% for genre in movie.genres %}
+        <li>{{genre.name}}</li>
+        {% endfor %}
+    </ul>
+    <ul>
+        <b>Cast:</b>
+        {% for person in credits.cast %}
+        <li><a href="/person/{{person.id}}">{{person.name}}</a> - {{person.character}}</li>
+        {% endfor %}
+    </ul>
+    <ul>
+        <b>Crew:</b>
+        {% for person in credits.crew %}
+        <li>{{person.name}} - {{person.job}}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

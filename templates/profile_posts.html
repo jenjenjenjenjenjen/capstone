@@ -1,0 +1,37 @@
+{% extends 'user_profile.html' %}
+{% block more %}
+<div>
+    {% for post in user.posts %}
+    {% for m in content %}
+    {% if post.content_id == m.id %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{img_url}}{{m.poster_path}}" class="card-img-top" alt="{{m.original_title or m.name}} Poster">
+        <div class="card-body">
+            <h5 class="card-title"><a
+                {% if post.content_type == 'm' %}
+                href="/movie/{{m.id}}"
+                {% elif post.content_type == 't' %}
+                href="/tv/{{m.id}}"
+                {% endif %}
+                >{{m.original_title or m.name}}</a></h5>
+            <p><i>@<a href="/user/{{post.user_id}}">{{post.user.username}}</a></i></p>
+            <p class="card-text">{{post.content}}</p>
+            {% if session['user_id'] == post.user_id %}
+                <form action="/posts/{{post.id}}/delete">
+                    <button class="btn">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </form>
+                <form action="/posts/{{post.id}}/edit">
+                    <button class="btn">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+</div>
+{% endblock %}
