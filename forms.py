@@ -1,4 +1,5 @@
 from tokenize import String
+from unicodedata import name
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField, SubmitField, HiddenField
 from wtforms.validators import InputRequired
@@ -39,3 +40,10 @@ class EditPostForm(FlaskForm):
     '''Form to edit a post'''
 
     content = TextAreaField('Content')
+
+class EditUserForm(FlaskForm):
+    '''Form to edit a users info'''
+
+    name = StringField('Name')
+    username = StringField('Username')
+    password = PasswordField('Please enter your password to save changes')

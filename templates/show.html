@@ -1,86 +1,149 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{show.name}}</h1>
-<img src="{{img_url}}{{show.backdrop_path}}" alt="">
-<div>
-    {% if user %}
-    <form action="/like/show/{{show.id}}", method="POST">
-        <button 
-        class="btn 
-        {% for like in user.likes %}
-        {% if show.id == like.movie_id %}
-        btn-primary
-        {% endif %}
-        {% endfor %}
-        ">
-            <i class="bi bi-heart"></i>
-        </button>
-    </form>
-    <form action="/posts/new/tv/{{show.id}}">
-        <button class="btn">
-            <i class="bi bi-pencil-square"></i>
-        </button>
-    </form>
-    {% endif %}
-    <p>{{show.overview}}</p>
-    <ul>
-        <li>
-            Created by: 
-            <ul>
-            {% for n in show.created_by %}
-                <li>{{n.name}}</li>
-            {% endfor %}
-            </ul>
-        </li>
-        <li>
-            Genre(s): 
-            <ul>
-            {% for n in show.genres %}
-                <li>{{n.name}}</li>
-            {% endfor %}
-            </ul>
-        </li>
-        <li>
-            Number of Episodes: {{show.number_of_episodes}}
-        </li>
-        <li>
-            Number of Seasons: {{show.number_of_seasons}}
-        </li>
-    </ul>
+<div class="header container movie-header" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{img_url}}{{show.backdrop_path}}');">
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="{{img_url}}{{show.poster_path}}" alt="" class="poster">
+        </div>
+        <div class="col-lg-8 movie-general-info">
+            <h1 id="movie-title">{{show.name}}</h1>
+            <div class="row">
+                <p class="col-md-8 general-info">
+                    {% for genre in show.genres %}
+                        {{genre.name}} |
+                    {% endfor %}
+                    |
+                    {{show.episode_run_time[0]}} mins
+                </p>
+            </div>
+            <div class="row">
+                <p class="col general-info">
+                    {{show.tagline}}
+                </p>
+            </div>
+            <div class="row">
+                <p class="col general-info">
+                    {{show.overview}}
+                </p>
+            </div>
+            {% if curr_user %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <form action="/like/show/{{show.id}}", method="POST">
+                            <button 
+                            class="btn 
+                            {% for like in curr_user.likes %}
+                            {% if show.id == like.movie_id %}
+                            btn-primary
+                            {% endif %}
+                            {% endfor %}
+                            ">
+                                <i class="bi bi-heart text-white"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <form action="/posts/new/show/{{show.id}}">
+                            <button class="btn">
+                                <i class="bi bi-pencil-square text-white"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-<div>
-    <h3>Seasons</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col-md-12">Seasons:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
     {% for season in show.seasons %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{season.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
+    <div class="card col-9 cast-card" style="width: 18rem;">
+                <img 
+                {% if season.poster_path %}
+                src="{{img_url}}{{season.poster_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
         <div class="card-body">
-            <h5 class="card-title">Season {{season.season_number}}</h5>
-            <p class="card-text">{{season.overview}}</p>
+            <h5 class="card-title">
+                Season {{season.season_number}}
+            </h5>
+            <div class="card-text season-card-text">
+                <p class="">
+                    {{season.overview}}
+                </p>
+            </div>
         </div>
     </div>
     {% endfor %}
+    </div>
 </div>
-<div>
-    <h3>Cast</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col-md-12">Cast:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
     {% for person in credits.cast %}
-    <div class="card" style="width: 18rem;">
+    <div class="card col-2 cast-card">
+            <a href="/person/{{person.id}}">
+                <img 
+                {% if person.profile_path %}
+                src="{{img_url}}{{person.profile_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
+            </a>
         <div class="card-body">
-            <h5 class="card-title"><a href="/person/{{person.id}}">{{person.name}}</a></h5>
-            <p class="card-text">{{person.character}}</p>
+            <h5 class="card-title">
+                {{person.name}}
+            </h5>
+            <div class="card-text">
+                <p class="person-card-text">
+                    {{person.character}}
+                </p>
+            </div>
         </div>
     </div>
     {% endfor %}
+    </div>
 </div>
-<div>
-    <h3>Crew</h3>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col-md-12">Crew:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
     {% for person in credits.crew %}
-    <div class="card" style="width: 18rem;">
+    <div class="card col-sm-2 cast-card">
+            <a href="/person/{{person.id}}">
+                <img 
+                {% if person.profile_path %}
+                src="{{img_url}}{{person.profile_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
+            </a>
         <div class="card-body">
-            <h5 class="card-title"><a href="/person/{{person.id}}">{{person.name}}</a></h5>
-            <p class="card-text">{{person.job}}</p>
+            <h5 class="card-title">
+                {{person.name}}
+            </h5>
+            <div class="card-text person-card-text">
+                <p>
+                    {{person.job}}
+                </p>
+            </div>
         </div>
     </div>
     {% endfor %}
+    </div>
 </div>
+
 {% endblock %}

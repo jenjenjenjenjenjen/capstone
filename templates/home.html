@@ -2,30 +2,268 @@
 
 {% block content %}
 
-<div>
-    <b>Popular Movies:</b>
-    {% for movie in movies.results %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
-        <div class="card-body">
-            <h5 class="card-title">{{movie.original_title}}</h5>
-            <p class="card-text">{{movie.overview}}</p>
-            <a href="/movie/{{movie.id}}" class="btn btn-primary">See More</a>
+<div class="container-lg" id="home-display">
+    {% if not curr_user %}
+    <div class="row">
+        <div class="col-lg">
+            <h1>Welcome to Movie Database</h1>
         </div>
     </div>
-    {% endfor %}
-</div>
-<div>
-    <b>Popular TV:</b>
-    {% for show in tv_shows.results %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{show.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
-        <div class="card-body">
-            <h5 class="card-title">{{show.original_title}}</h5>
-            <p class="card-text">{{show.overview}}</p>
-            <a href="/tv/{{show.id}}" class="btn btn-primary">See More</a>
+    <div class="row">
+        <div class="col-lg">
+            <h3>Explore movies, TV shows, actors, and more!</h3>
         </div>
     </div>
-    {% endfor %}
+    <div class="row">
+        <div class="col-lg">
+            <h5>Create an account or log in to share your favorite content with friends.</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <a href="/register" class="btn btn-primary">Create Account</a>
+            <a href="/signin" class="btn btn-primary">Sign In</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-lg">
+            <h1>Welcome back, {{curr_user.name}}!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg">
+            <h3>Make a post or check out your feed:</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg">
+            <a href="/posts/new" class="btn btn-primary">New Post</a>
+            <a href="/user/posts" class="btn btn-primary">Feed</a>
+        </div>
+    </div>
+    {% endif %}
 </div>
+
+<section class="container pt-3 popular-label">
+    <div class="row">
+        <div class="col-lg-12">
+            <b class="display-6">Popular Movies:</b>
+        </div>
+    </div>
+
+<section class="carousel slide" data-bs-ride="carousel" id="carouselControlsMovie">
+    <div class="carousel-inner" role="listbox">
+        <div class="carousel-item active">
+            <div class="row">
+                {% for movie in movies[0] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{movie.poster_path}}" alt="{{movie.original_title}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{movie.original_title}}</h5>
+                                <p>{{movie.release_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{movie.vote_average}}</p>
+                                <form action="/movie/{{movie.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                {% for movie in movies[1] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{movie.poster_path}}" alt="{{movie.original_title}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{movie.original_title}}</h5>
+                                <p>{{movie.release_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{movie.vote_average}}</p>
+                                <form action="/movie/{{movie.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                {% for movie in movies[2] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{movie.poster_path}}" alt="{{movie.original_title}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{movie.original_title}}</h5>
+                                <p>{{movie.release_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{movie.vote_average}}</p>
+                                <form action="/movie/{{movie.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                {% for movie in movies[3] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{movie.poster_path}}" alt="{{movie.original_title}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{movie.original_title}}</h5>
+                                <p>{{movie.release_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{movie.vote_average}}</p>
+                                <form action="/movie/{{movie.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev btn btn-secondary" type="button" data-bs-target="#carouselControlsMovie" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next btn btn-secondary" type="button" data-bs-target="#carouselControlsMovie" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</section>
+</section>
+
+<section class="container pt-3 popular-label">
+    <div class="row">
+        <div class="col-lg-12">
+            <b class="display-6">Popular TV:</b>
+        </div>
+    </div>
+
+<section class="carousel slide" data-bs-ride="carousel" id="carouselControlsShow">
+    <div class="carousel-inner" role="listbox">
+        <div class="carousel-item active">
+            <div class="row">
+                {% for show in tv_shows[0] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{show.poster_path}}" alt="{{show.name}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{show.name}}</h5>
+                                <p>{{show.first_air_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{show.vote_average}}</p>
+                                <form action="/tv/{{show.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                {% for show in tv_shows[1] %}
+                <div class="col-md-3 movie-card">
+                    <div class="card mb-2">
+                        <img class="card-img-top" src="{{img_url}}{{show.poster_path}}" alt="{{show.name}} Poster">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h5>{{show.name}}</h5>
+                            <p>{{show.first_air_date}}</p>
+                        </div>
+                        <div class="card-text row">
+                            <p class="rating col-lg-3">{{show.vote_average}}</p>
+                            <form action="/tv/{{show.id}}" class="col-lg-9 more">
+                                <button class="btn btn-light">See More</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                {% for show in tv_shows[2] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{show.poster_path}}" alt="{{show.name}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{show.name}}</h5>
+                                <p>{{show.first_air_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{show.vote_average}}</p>
+                                <form action="/tv/{{show.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                {% for show in tv_shows[3] %}
+                    <div class="col-md-3 movie-card">
+                        <div class="card mb-2">
+                            <img class="card-img-top" src="{{img_url}}{{show.poster_path}}" alt="{{show.name}} Poster">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5>{{show.name}}</h5>
+                                <p>{{show.first_air_date}}</p>
+                            </div>
+                            <div class="card-text row">
+                                <p class="rating col-lg-3">{{show.vote_average}}</p>
+                                <form action="/tv/{{show.id}}" class="col-lg-9 more">
+                                    <button class="btn btn-light">See More</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev btn btn-secondary" type="button" data-bs-target="#carouselControlsShow" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next btn btn-secondary" type="button" data-bs-target="#carouselControlsShow" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</section>
+</section>
 {% endblock %}

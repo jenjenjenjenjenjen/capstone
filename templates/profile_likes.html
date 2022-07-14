@@ -1,33 +1,65 @@
 {% extends 'user_profile.html' %}
-{% block more %}
+{% block user_info %}
 <div>
     {% for like in user.likes_posts %}
-    {% for m in content %}
-    {% if like.post.content_id == m.id %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{m.poster_path}}" class="card-img-top" alt="{{m.original_title or m.name}} Poster">
-        <div class="card-body">
-            <h5 class="card-title"><a
-                {% if like.post.content_type == 'm' %}
-                href="/movie/{{m.id}}"
-                {% elif like.post.content_type == 't' %}
-                href="/tv/{{m.id}}"
-                {% endif %}
-                >{{m.original_title or m.name}}</a></h5>
-            <p><i>@<a href="/user/{{like.post.user_id}}">{{like.post.user.username}}</a></i></p>
-            <p class="card-text">{{like.post.content}}</p>
-            {% if session['user_id'] == like.post.user_id %}
-                <form action="/posts/{{like.post.id}}/delete">
-                    <button class="btn">
-                        <i class="bi bi-trash3"></i>
-                    </button>
-                </form>
-                <form action="/posts/{{like.post.id}}/edit">
-                    <button class="btn">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
-                </form>
-            {% endif %}
+    {% for c in content %}
+    {% if like.post.content_id == c.id %}
+    <div class="card mb-3 mx-auto" style="width: 540px;">
+        <div class="row g-0">
+            <div class="col-4">
+                <img src="{{img_url}}{{c.poster_path}}" alt="{{c.original_title or c.name}} Poster" class="img-fluid rounded-start">
+            </div>
+            <div class="col-8">
+                <div class="card-body post-card-body">
+                    <div class="card-title row">
+                        <h5 class="col-12"><a
+                            {% if like.content_type == 'm' %}
+                            href="/movie/{{c.id}}"
+                            {% elif like.content_type == 't' %}
+                            href="/tv/{{c.id}}"
+                            {% endif %}
+                            >{{c.original_title or c.name}}</a>
+                        </h5>
+                    </div>
+                    <div class="row">
+                        <p class="card-text col-9"><b>{{like.post.user.name}}</b></p>
+                        <p class="card-text col-3"><i>@<a href="/user/{{like.user_id}}">{{like.post.user.username}}</a></i></p>
+                    </div>
+                    <div class="row">
+                        <p class="card-text col">{{like.post.content}}</p>
+                    </div>
+                        {% if session['user_id'] == like.user_id %}
+                        <div class="container">
+                        <div class="card-text post-card-buttons row">
+                            <form action="/posts/{{like.id}}/delete" class="col-6"> 
+                                <button class="btn align-self-end" style="margin-top: auto;">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                            <form action="/posts/{{like.id}}/edit" class="col-6">
+                                <button class="btn">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </form>
+                        </div>
+                        </div>
+                        {% else %}
+                            <form action="/like/post/{{like.id}}", method="POST">
+                                <button class="btn">
+                                    <i class="bi bi-hand-thumbs-up
+                                        {% for like in curr_user.likes_posts %}
+                                            {% if like.post_id == post.id %}
+                                                text-danger
+                                            {% else %}
+                                
+                                            {% endif %}
+                                            {% endfor %}
+                                    "></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     {% endif %}

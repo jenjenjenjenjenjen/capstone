@@ -3,7 +3,7 @@
 
 <h1 class="display-1">New Post</h1>
 
-    <form method="POST">
+    <form method="POST" class="w-75 mx-auto">
         {{search_form.hidden_tag()}}
         {% for field in search_form
             if field.widget.input_type != 'hidden' %}
@@ -20,34 +20,42 @@
 
     {% if movie %}
     {% for m in movie.results %}
-    <form method="POST">
-        <p>
-            <div class="card" style="width: 18rem;">
-                <img src="{{img_url}}{{m.poster_path}}" alt="{{m.original_title or m.name}} Poster">
-                <div class="card-body">
-                    <h5 class="card-title">{{m.original_title or m.name}}</h5>
-                    {{select_form.csrf_token()}}
-                    {{select_form.movie_or_tv(value=movie_or_tv)}}
-                    {{select_form.movie_id(value=m.id)}}
-                    {% for field in select_form 
-                        if field.widget.input_type != 'hidden' %}
-                        {% for err in field.errors %}
-                            <span class="form-text text-danger">{{err}}</span>
-                        {% endfor %}
-                    {% endfor %}
-                    <button class="btn" style="width: 16rem;" type="submit">Select</button>
+    <div class="container w-75 mx-auto">
+        <form method="POST">
+            <div class="card mb-3 w-75">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{img_url}}{{m.poster_path}}" alt="{{m.original_title or m.name}} Poster" class="w-50">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{m.original_title or m.name}}</h5>
+                            <p class="card-text">{{m.overview}}</p>
+                            {{select_form.csrf_token()}}
+                            {{select_form.movie_or_tv(value=movie_or_tv)}}
+                            {{select_form.movie_id(value=m.id)}}
+                                {% for field in select_form 
+                                    if field.widget.input_type != 'hidden' %}
+                                    {% for err in field.errors %}
+                                         <span class="form-text text-danger">{{err}}</span>
+                                    {% endfor %}
+                                {% endfor %}
+                            <button class="btn" style="width: 16rem;" type="submit">Select</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </p>
-    </form>
+        </form>
+    </div>
     {% endfor %}
     {% endif %}
 
-    <form method="POST">
+<div class="container">
+    <form method="POST" class="w-75 mx-auto">
         {{form.csrf_token()}}
         {% if selected_movie %}
             <h4 class="display-4">Selected:</h4>
-            <div class="card" style="width: 18rem;">
+            <div class="card mb-3 mx-auto w-75">
                 <img src="{{img_url}}{{selected_movie.poster_path}}" class="card-img-top" alt="{{selected_movie.original_title or selected_movie.name}} Poster">
                 <div class="card-body">
                     <h5 class="card-title">{{selected_movie.original_title or selected_movie.name}}</h5>
@@ -76,4 +84,5 @@
             {% endfor %}
         </div>
     </form>
+</div>
 {% endblock%}

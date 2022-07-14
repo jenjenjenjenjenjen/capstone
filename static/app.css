@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+html body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.home-navbar {
+    background-color: rgb(218, 226, 223);
+}
+
+
+#search-form {
+    margin-left: 5rem;
+}
+
+#search-button {
+    background-color: rgba(241, 247, 238, 0.5);
+    border-radius: 0.5rem;
+}
+
+#home-display {
+    height: 20rem;
+    text-align: center;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    background-color: rgba(226, 218, 219, 0.5);
+}
+
+.rating {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: green;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.poster {
+    width: 20rem;
+    position: relative;
+    padding-right: 20px;
+}
+
+.cast-card {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.cast-card-container {
+    overflow: auto;
+}
+
+.person-card-text {
+    font-size: small;
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+}
+
+.movie-header {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.general-info {
+    color: white;
+}
+
+#movie-title {
+    color: white;
+}
+
+.movie-general-info {
+    padding-top: 5rem;
+}
+
+.season-card-text {
+    height: 10rem;
+}
+
+.post-card-body {
+    padding-top: 0%;
+}
+
+.person-profile-pic {
+    padding-top: 2.5rem;
+    border-radius: 00.5rem;
+}
+
+.profile-name {
+    text-decoration: none;
+    color: black;
+    cursor: auto;
+}

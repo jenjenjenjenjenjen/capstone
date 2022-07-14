@@ -1,8 +1,10 @@
 from crypt import methods
+from webbrowser import get
 from models import db, connect_db, User, Post, Like, Follower, Following, LikePost
+from funcs import get_movie_lists
 from flask import Flask, render_template, request, redirect, session, flash
 from key import api_key
-from forms import NewUserForm, SignInForm, NewPostForm, SearchForm, SelectForm, EditPostForm
+from forms import NewUserForm, SignInForm, NewPostForm, SearchForm, SelectForm, EditPostForm, EditUserForm
 import requests
 import random
 
@@ -23,15 +25,19 @@ IMG_URL = 'https://www.themoviedb.org/t/p/w440_and_h660_face'
 def home_page():
     '''Show home page'''
 
-    page = random.randint(1, 10)
-
-    resp_movies = requests.get(f'{BASE_URL}/movie/popular', params={'api_key': api_key, 'page': page})
+    resp_movies = requests.get(f'{BASE_URL}/movie/popular', params={'api_key': api_key, 'page': 1})
     movies = resp_movies.json()
+    movie_lists = get_movie_lists(movies)
 
-    resp_shows = requests.get(f'{BASE_URL}/tv/popular', params={'api_key': api_key, 'page': page})
+    resp_shows = requests.get(f'{BASE_URL}/tv/popular', params={'api_key': api_key, 'page': 1})
     tv_shows = resp_shows.json()
+    show_lists = get_movie_lists(tv_shows)
 
-    return render_template('home.html', movies=movies, tv_shows=tv_shows, img_url=IMG_URL)
+    if 'user_id' in session:
+        curr_user = User.query.get(session['user_id'])
+        return render_template('home.html', movies=movie_lists, tv_shows=show_lists, img_url=IMG_URL, curr_user=curr_user)
+
+    return render_template('home.html', movies=movie_lists, tv_shows=show_lists, img_url=IMG_URL)
 
 @app.route('/movie/<int:movie_id>')
 def movie_details(movie_id):
@@ -63,17 +69,21 @@ def movie_home_page():
 
     pop_resp = requests.get(f'{BASE_URL}/movie/popular', params={'api_key': api_key})
     popular = pop_resp.json()
+    popular_lists = get_movie_lists(popular)
 
     top_resp = requests.get(f'{BASE_URL}/movie/top_rated', params={'api_key': api_key})
     top_rated = top_resp.json()
+    top_lists = get_movie_lists(top_rated)
 
     playing_resp = requests.get(f'{BASE_URL}/movie/now_playing', params={'api_key': api_key})
     now_playing = playing_resp.json()
+    playing_lists = get_movie_lists(now_playing)
 
     up_resp = requests.get(f'{BASE_URL}/movie/upcoming', params={'api_key': api_key})
     upcoming = up_resp.json()
+    upcoming_lists = get_movie_lists(upcoming)
 
-    return render_template('movie_home.html', popular=popular, top_rated=top_rated, now_playing=now_playing, upcoming=upcoming, img_url=IMG_URL)
+    return render_template('movie_home.html', popular=popular_lists, top_rated=top_lists, now_playing=playing_lists, upcoming=upcoming_lists, img_url=IMG_URL)
 
 @app.route('/person/<int:person_id>')
 def person_details(person_id):
@@ -103,7 +113,7 @@ def show_details(show_id):
         resp2 = requests.get(f'{BASE_URL}/tv/{show_id}/credits', params={'api_key': api_key})
         credits = resp2.json()
 
-        return render_template('show.html', show=show, credits=credits, user=user, img_url=IMG_URL)
+        return render_template('show.html', show=show, credits=credits, curr_user=user, img_url=IMG_URL)
     
     else:
         resp = requests.get(f'{BASE_URL}/tv/{show_id}', params={'api_key': api_key})
@@ -120,17 +130,21 @@ def show_tv_home():
 
     pop_resp = requests.get(f'{BASE_URL}/tv/popular', params={'api_key': api_key})
     popular = pop_resp.json()
+    popular_lists = get_movie_lists(popular)
 
     top_resp = requests.get(f'{BASE_URL}/tv/top_rated', params={'api_key': api_key})
     top_rated = top_resp.json()
+    top_lists = get_movie_lists(top_rated)
 
     today_resp = requests.get(f'{BASE_URL}/tv/airing_today', params={'api_key': api_key})
     airing_today = today_resp.json()
+    today_lists = get_movie_lists(airing_today)
 
-    latest_resp = requests.get(f'{BASE_URL}/tv/latest', params={'api_key': api_key})
-    latest = latest_resp.json()
+    on_air_resp = requests.get(f'{BASE_URL}/tv/on_the_air', params={'api_key': api_key})
+    on_air = on_air_resp.json()
+    on_air_lists = get_movie_lists(on_air)
 
-    return render_template('tv_home.html', popular=popular, top_rated=top_rated, airing_today=airing_today, latest=latest, img_url=IMG_URL)
+    return render_template('tv_home.html', popular=popular_lists, top_rated=top_lists, airing_today=today_lists, on_air=on_air_lists, img_url=IMG_URL)
 
 ########## LOG IN/LOGOUT #############
 
@@ -216,6 +230,33 @@ def show_user_profile():
         shows.append(show)
 
     return render_template('profile.html', user=user, img_url=IMG_URL, shows=shows, movies=movies)
+
+@app.route('/user/profile/edit', methods=['GET', 'POST'])
+def edit_user():
+    '''Edit user info'''
+
+    if 'user_id' not in session:
+        flash('Access unauthorized! Please log in or sign up.')
+        return redirect('/')
+
+    form = EditUserForm()
+    user = User.query.get(session['user_id'])
+
+    if form.validate_on_submit():
+        if User.authenticate(
+            username=user.username,
+            password=form.password.data
+        ):
+            user.name = form.name.data
+            user.username = form.username.data
+            db.session.commit()
+            flash('Changes saved!', 'success')
+            return redirect('/user/profile')
+        else:
+            flash('Invalid password!', 'error')
+            return redirect('/user/profile')
+
+    return render_template('edit_user.html', form=form, user=user)
 
 ############# USER INFO ###############
 

@@ -1,49 +1,120 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h1>{{movie.original_title}}</h1>
-<div>
-    <img src="{{img_url}}{{movie.backdrop_path}}" alt="">
+<div class="header container movie-header" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{img_url}}{{movie.backdrop_path}}');">
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="{{img_url}}{{movie.poster_path}}" alt="" class="poster">
+        </div>
+        <div class="col-lg-8 movie-general-info">
+            <h1 id="movie-title">{{movie.original_title}}</h1>
+            <div class="row">
+                <p class="col-md-8 general-info">
+                    {{movie.release_date}} |
+            
+                    {% for genre in movie.genres %}
+                        {{genre.name}} 
+                    {% endfor %}
+                    |
+                    {{movie.runtime}} mins
+                </p>
+            </div>
+            <div class="row">
+                <p class="general-info">
+                    {{movie.tagline}}
+                </p>
+            </div>
+            <div class="row">
+                <p class="general-info">
+                    {{movie.overview}}
+                </p>
+            </div>
+            {% if curr_user %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <form action="/like/{{movie.id}}", method="POST">
+                            <button 
+                            class="btn 
+                            {% for like in curr_user.likes %}
+                            {% if movie.id == like.movie_id %}
+                            btn-primary
+                            {% endif %}
+                            {% endfor %}
+                            ">
+                                <i class="bi bi-heart text-white"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <form action="/posts/new/movie/{{movie.id}}">
+                            <button class="btn">
+                                <i class="bi bi-pencil-square text-white"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-<div>
-    {% if curr_user %}
-    <form action="/like/{{movie.id}}", method="POST">
-        <button 
-        class="btn 
-        {% for like in curr_user.likes %}
-        {% if movie.id == like.movie_id %}
-        btn-primary
-        {% endif %}
-        {% endfor %}
-        ">
-            <i class="bi bi-heart"></i>
-        </button>
-    </form>
-    <form action="/posts/new/movie/{{movie.id}}">
-        <button class="btn">
-            <i class="bi bi-pencil-square"></i>
-        </button>
-    </form>
-    {% endif %}
-    <p>{{movie.overview}}</p>
-    <p>Rating: {{movie.popularity}}</p>
-    <ul>
-        <b>Genres:</b>
-        {% for genre in movie.genres %}
-        <li>{{genre.name}}</li>
-        {% endfor %}
-    </ul>
-    <ul>
-        <b>Cast:</b>
-        {% for person in credits.cast %}
-        <li><a href="/person/{{person.id}}">{{person.name}}</a> - {{person.character}}</li>
-        {% endfor %}
-    </ul>
-    <ul>
-        <b>Crew:</b>
-        {% for person in credits.crew %}
-        <li>{{person.name}} - {{person.job}}</li>
-        {% endfor %}
-    </ul>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col-md-12">Cast:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
+    {% for person in credits.cast %}
+    <div class="card col-2 cast-card">
+            <a href="/person/{{person.id}}">
+                <img 
+                {% if person.profile_path %}
+                src="{{img_url}}{{person.profile_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
+            </a>
+        <div class="card-body">
+            <h5 class="card-title">
+                {{person.name}}
+            </h5>
+            <div class="card-text">
+                <p class="person-card-text">
+                    {{person.character}}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col-md-12">Crew:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
+    {% for person in credits.crew %}
+    <div class="card col-sm-2 cast-card">
+            <a href="/person/{{person.id}}">
+                <img 
+                {% if person.profile_path %}
+                src="{{img_url}}{{person.profile_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
+            </a>
+        <div class="card-body">
+            <h5 class="card-title">
+                {{person.name}}
+            </h5>
+            <div class="card-text person-card-text">
+                <p>
+                    {{person.job}}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
 </div>
 {% endblock %}

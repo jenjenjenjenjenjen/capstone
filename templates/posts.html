@@ -4,63 +4,80 @@
 
 <div>
     <nav class="navbar">
-        <ul class="navbar-nav">
+        <ul class="nav nav-tabs justify-content-center">
             <li class="nav-item">
-                <a class="nav-link" href="/user/posts">All</a>
+                <a class="nav-link active" href="/user/posts">All</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/user/posts/following">Following</a>
+                <a class="nav-link active" href="/user/posts/following">Following</a>
             </li>
         </ul>
     </nav>
 </div>
 {% block if %}
 {% endblock %}
-<div>
+<div class="container">
     {% for post in posts %}
         {% for content in post_details %}
             {% if post.content_id == content.id %}
-            <div class="card" style="width: 18rem;">
-                <img src="{{img_url}}{{content.poster_path}}" class="card-img-top" alt="{{content.original_title or content.name}} Poster">
-                <div class="card-body">
-                    <h5 class="card-title"><a
-                        {% if post.content_type == 'm' %}
-                        href="/movie/{{content.id}}"
-                        {% elif post.content_type == 't' %}
-                        href="/tv/{{content.id}}"
-                        {% endif %}
-                        >{{content.original_title or content.name}}</a></h5>
-                    <p><i>@<a href="/user/{{post.user_id}}">{{post.user.username}}</a></i></p>
-                    <p class="card-text">{{post.content}}</p>
-                    {% if session['user_id'] == post.user_id %}
-                        <form action="/posts/{{post.id}}/delete"> 
-                            <button class="btn">
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        </form>
-                        <form action="/posts/{{post.id}}/edit">
-                            <button class="btn">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                        </form>
-                    {% else %}
-                        <form action="/like/post/{{post.id}}", method="POST">
-                            <button
-                                class="btn">
-                                <i class="bi bi-hand-thumbs-up
-                                    {% for like in curr_user.likes_posts %}
-                                        {% if like.post_id == post.id %}
-                                            text-danger
-                                        {% else %}
-                                            
+                <div class="card mb-3 mx-auto" style="width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-4">
+                            <img src="{{img_url}}{{content.poster_path}}" alt="{{content.original_title or content.name}} Poster" class="img-fluid rounded-start">
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body post-card-body">
+                                <div class="card-title row">
+                                    <h5 class="col-12"><a
+                                        {% if post.content_type == 'm' %}
+                                        href="/movie/{{content.id}}"
+                                        {% elif post.content_type == 't' %}
+                                        href="/tv/{{content.id}}"
                                         {% endif %}
-                                    {% endfor %}
-                                "></i>
-                            </button>
-                        </form>
-                    {% endif %}
+                                        >{{content.original_title or content.name}}</a>
+                                    </h5>
+                                </div>
+                                <div class="row">
+                                    <p class="card-text col-9"><b>{{post.user.name}}</b></p>
+                                    <p class="card-text col-3"><i>@<a href="/user/{{post.user_id}}">{{post.user.username}}</a></i></p>
+                                </div>
+                                <div class="row">
+                                    <p class="card-text col">{{post.content}}</p>
+                                </div>
+                                    {% if session['user_id'] == post.user_id %}
+                                    <div class="container">
+                                    <div class="card-text post-card-buttons row">
+                                        <form action="/posts/{{post.id}}/delete" class="col-6"> 
+                                            <button class="btn align-self-end" style="margin-top: auto;">
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+                                        </form>
+                                        <form action="/posts/{{post.id}}/edit" class="col-6">
+                                            <button class="btn">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    </div>
+                                    {% else %}
+                                        <form action="/like/post/{{post.id}}", method="POST">
+                                            <button class="btn">
+                                                <i class="bi bi-hand-thumbs-up
+                                                    {% for like in curr_user.likes_posts %}
+                                                        {% if like.post_id == post.id %}
+                                                            text-danger
+                                                        {% else %}
+                                            
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                "></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
             {% endif %}
         {% endfor %}
     {% endfor %}

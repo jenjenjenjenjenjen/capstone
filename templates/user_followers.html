@@ -1,11 +1,12 @@
 {% extends 'user_profile.html' %}
-{% block more %}
+{% block user_info %}
     {% for f in followers %}
-        <div>
-            <ul>
-                <li>{{f.follower.name}}</li>
-                <li>{{f.follower.username}}</li>
-            </ul>
-        </div>
+        <div class="card mx-auto w-25">
+            <div class="card-body">
+                <h5 class="card-title">{{f.follower.name}}</h5>
+                <p class="card-subtitle">@{{f.follower.username}}</p>
+                <a href="/user/{{f.follower.id}}" class="card-text btn btn-light">See User</a>
+            </div>
+        </div>    
     {% endfor %}
 {% endblock %}

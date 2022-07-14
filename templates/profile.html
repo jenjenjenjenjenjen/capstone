@@ -1,63 +1,101 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="display-1">{{user.name}}</h1>
 
-<div class="container">
-    <ul>
-        <li>
-            <a href="/user/{{user.id}}/followers" class="btn">
-                Followers: 
-                {{user.followers | length}}
-            </a>
-        </li>
-        <li>
-            <a href="/user/{{user.id}}/following" class="btn">
-                Following:
-                {{user.following | length}}
-            </a>
-        </li>
-        <li><a href="/user/{{user.id}}/posts" class="btn">Posts: {{user.posts | length}}</a></li>
-        <li>
-            <a href="/user/{{user.id}}/likes" class="btn">Likes: {{user.likes_posts | length}}</a>
-        </li>
-    </ul>
-    {% block buttons %}
-    <form action="">
-        <button>Edit Profile</button>
-    </form>
-    {% endblock %}
-</div>
-{% block more %}
+{% block buttons %}
+<h1 class="display-1">
+    <a href="/user/profile" class="profile-name">{{user.name}}</a>
+</h1>
+<form action="/user/profile/edit">
+    <button class="btn btn-light">Edit Profile</button>
+</form>
+{% endblock %}
+
+<ul class="nav nav-tabs justify-content-end">
+    <li class="nav-item">
+        <a href="/user/{{user.id}}/followers" class="nav-link active">Followers: {{user.followers | length}}</a>
+    </li>
+    <li class="nav-item">
+        <a href="/user/{{user.id}}/following" class="nav-link active">Following: {{user.following | length}}</a>
+    </li>
+    <li class="nav-item">
+        <a href="/user/{{user.id}}/posts" class="nav-link active">Posts: {{user.posts | length}}</a>
+    </li>
+    <li class="nav-item">
+        <a href="/user/{{user.id}}/likes" class="nav-link active">Likes: {{user.likes_posts | length}}</a>
+    </li>
+</ul>
+
+
 {% if movies %}
-<div>
-    <h3>{{user.name}}'s Favorite Movies:</h3>
+
+<div class="container-fluid p-3">
+    <div class="row">
+        <h2 class="col-md-12">{{user.name}}'s Favorite Movies:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
     {% for movie in movies %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
+    <div class="card col-2 cast-card">
+            <a href="/movie/{{movie.id}}">
+                <img 
+                {% if movie.poster_path %}
+                src="{{img_url}}{{movie.poster_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
+            </a>
         <div class="card-body">
-            <h5 class="card-title">{{movie.original_title}}</h5>
-            <p class="card-text">{{movie.overview}}</p>
-            <a href="/movie/{{movie.id}}" class="btn btn-primary">See More</a>
+            <h5 class="card-title">
+                {{movie.original_title}}
+            </h5>
+            <div class="card-text">
+                <a href="/movie/{{movie.id}}" class="person-card-text btn btn-light">
+                    See More
+                </a>
+            </div>
         </div>
     </div>
     {% endfor %}
+    </div>
 </div>
 {% endif %}
 {% if shows %}
-<div>
-    <h3>{{user.name}}'s Favorite Shows:</h3>
+
+<div class="container-fluid p-3">
+    <div class="row">
+        <h2 class="col-md-12">{{user.name}}'s Favorite Shows:</h2>
+    </div>
+    <div class="row flex-row flex-nowrap cast-card-container">
     {% for show in shows %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{show.poster_path}}" class="card-img-top" alt="{{show.name}} Poster">
+    <div class="card col-2 cast-card">
+            <a href="/tv/{{show.id}}">
+                <img 
+                {% if show.poster_path %}
+                src="{{img_url}}{{show.poster_path}}" 
+                {% else %}
+                src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                {% endif %}
+                alt="" class="card-img-top person-profile-img">
+            </a>
         <div class="card-body">
-            <h5 class="card-title">{{show.name}}</h5>
-            <p class="card-text">{{show.overview}}</p>
-            <a href="/tv/{{show.id}}" class="btn btn-primary">See More</a>
+            <h5 class="card-title">
+                {{show.name}}
+            </h5>
+            <div class="card-text">
+                <a href="/tv/{{show.id}}" class="person-card-text btn btn-light">
+                    See More
+                </a>
+            </div>
         </div>
     </div>
     {% endfor %}
+    </div>
 </div>
+
 {% endif %}
+
+{% block user_info %}
 {% endblock %}
+
 {% endblock %}

@@ -1,6 +1,9 @@
 {% extends 'profile.html' %}
 {% block buttons %}
     {% if user.id != curr_user.id %}
+    <h1 class="display-1">
+        <a href="/user/{{user.id}}" class="profile-name">{{user.name}}</a>
+    </h1>
         {% if curr_user.following == [] %}
             <form action="/follow/{{user.id}}", method="POST">
                 <button>Follow</button>
@@ -9,18 +12,21 @@
             {% for following in curr_user.following %}
                 {% if following.following_id == user.id %}
                     <form action="/unfollow/{{user.id}}", method="POST">
-                        <button>Unfollow</button>
+                        <button class="btn btn-light">Unfollow</button>
                     </form>
                 {% else %}
                     <form action="/follow/{{user.id}}", method="POST">
-                        <button>Follow</button>
+                        <button class="btn btn-light">Follow</button>
                     </form>
                 {% endif %}
             {% endfor %}
         {% endif %}
     {% else %}
-        <form action="">
-            <button>Edit Profile</button>
+        <h1 class="display-1">
+            <a href="/user/profile" class="profile-name">{{curr_user.name}}</a>
+        </h1>
+        <form action="/user/profile/edit">
+            <button class="btn btn-light">Edit Profile</button>
         </form>
     {% endif %}
 {% endblock %}

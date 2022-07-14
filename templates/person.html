@@ -1,45 +1,170 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<img src="{{img_url}}{{person.profile_path}}" alt="Photo of {{person.name}}">
-<h1>{{person.name}}</h1>
-<div>
-{% if person.also_known_as %}
-    <h5>Also known as:</h5>
-    <ul>
-        {% for n in person.also_known_as %}
-        <li>{{n}}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-<p>Date of Birth: {{person.birthday}}</p>
-<b>About:</b>
-<p>{{person.biography}}</p>
-<div>
-<b>Movies:</b>
-{% for movie in movie_credits.cast %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{img_url}}{{movie.poster_path}}" class="card-img-top" alt="{{movie.original_title}} Poster">
-        <div class="card-body">
-            <h5 class="card-title">{{movie.original_title}}</h5>
-            <p class="card-text">{{movie.overview}}</p>
-            <a href="/movie/{{movie.id}}" class="btn btn-primary">See More</a>
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <img src="{{img_url}}{{person.profile_path}}" alt="Photo of {{person.name}}" class="w-100 person-profile-pic">
         </div>
-    </div>
-    {% endfor %}
-</div>
-<div>
-    <b>TV Shows:</b>
-    {% for show in tv_credits.cast %}
-        <div class="card" style="width: 18rem;">
-            <img src="{{img_url}}{{show.poster_path}}" class="card-img-top" alt="{{show.original_title}} Poster">
-            <div class="card-body">
-                <h5 class="card-title">{{show.original_title}}</h5>
-                <p class="card-text">{{show.overview}}</p>
-                <a href="/tv/{{show.id}}" class="btn btn-primary">See More</a>
+        <div class="col-9">
+            <h1>{{person.name}}</h1>
+            <div class="row">
+                <div class="col-6">
+                    <h4>Biography</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{person.biography}}</p>
+                </div>
             </div>
         </div>
-        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col">
+                    <h5>Personal Info</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Known for:</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{person.known_for_department}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Known credits:</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{tv_credits.cast | length + movie_credits.cast | length + tv_credits.crew | length + movie_credits.crew |length}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Gender:</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>
+                        {% if person.gender == 1 %}
+                        Female
+                        {% elif person.gender == 2 %}
+                        Male
+                        {% else %}
+                        Non-Binary
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Birthday:</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{person.birthday}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Place of birth:</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{person.place_of_birth}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Also known as:</b>
+                </div>
+            </div>
+            {% for n in person.also_known_as %}
+            <div class="row">
+                <div class="col">
+                    <p>{{n}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-9">
+            <div class="container-fluid">
+                <div class="row">
+                    <h2 class="col-md-12">Movies:</h2>
+                </div>
+                <div class="row flex-row flex-nowrap cast-card-container">
+                {% for movie in movie_credits.cast %}
+                <div class="card col-2 cast-card w-25">
+                        <a href="/movie/{{movie.id}}">
+                            <img 
+                            {% if movie.poster_path %}
+                            src="{{img_url}}{{movie.poster_path}}" 
+                            {% else %}
+                            src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                            {% endif %}
+                            alt="" class="card-img-top person-profile-img">
+                        </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{movie.original_title}}
+                        </h5>
+                        <div class="card-text mt-auto">
+                            <a href="/movie/{{movie.id}}" class="btn btn-light">See More</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+
+        </div>
+        <div class="col-9">
+            <div class="container-fluid">
+                <div class="row">
+                    <h2 class="col-md-12">TV Shows:</h2>
+                </div>
+                <div class="row flex-row flex-nowrap cast-card-container">
+                {% for show in tv_credits.cast %}
+                <div class="card col-2 cast-card w-25">
+                        <a href="/tv/{{show.id}}">
+                            <img 
+                            {% if show.poster_path %}
+                            src="{{img_url}}{{show.poster_path}}" 
+                            {% else %}
+                            src="https://www.ordinatrix.com/wp-content/uploads/2018/06/user.png"
+                            {% endif %}
+                            alt="" class="card-img-top person-profile-img">
+                        </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{show.name}}
+                        </h5>
+                        <div class="card-text mt-auto">
+                            <a href="/tv/{{show.id}}" class="btn btn-light">See More</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 {% endblock %}
